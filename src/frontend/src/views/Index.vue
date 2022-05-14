@@ -33,16 +33,16 @@
                   v-for="dough in pizza.dough"
                   :key="`dough-${dough.id}`"
                   class="dough__input"
+                  :class="`dough__input--${slugDough(dough.name)}`"
                 >
                   <input
                     type="radio"
                     name="dought"
-                    :value="dough.id"
+                    :value="slugDough(dough.name)"
                     class="visually-hidden"
                     :checked="dough.id == 1"
                   />
                   <b>
-                    <img class="dough__image" :src="dough.image" alt="" />
                     {{ dough.name }}
                   </b>
                   <span>{{ dough.description }}</span>
@@ -59,17 +59,17 @@
                 <label
                   v-for="size in pizza.sizes"
                   :key="`size-${size.id}`"
-                  class="diameter__input diameter__input--small"
+                  class="diameter__input"
+                  :class="`diameter__input--${slugSize(size.name)}`"
                 >
                   <input
                     type="radio"
                     name="diameter"
-                    :value="size.id"
+                    :value="slugSize(size.name)"
                     class="visually-hidden"
                     :checked="size.id == 1"
                   />
                   <span>
-                    <img class="diameter__image" :src="size.image" alt="" />
                     {{ size.name }}
                   </span>
                 </label>
@@ -111,12 +111,10 @@
                       :key="`ingredient-${ingredient.id}`"
                       class="ingredients__item"
                     >
-                      <span class="filling">
-                        <img
-                          class="filling__image"
-                          :src="ingredient.image"
-                          alt=""
-                        />
+                      <span
+                        class="filling"
+                        :class="`filling--${slugIngredient(ingredient.image)}`"
+                      >
                         {{ ingredient.name }}
                       </span>
 
@@ -192,40 +190,34 @@ export default {
       misc,
     };
   },
+  methods: {
+    slugDough(name) {
+      switch (name) {
+        case "Тонкое":
+          return "light";
+        case "Толстое":
+          return "large";
+        default:
+          return "";
+      }
+    },
+    slugSize(name) {
+      switch (name) {
+        case "23 см":
+          return "small";
+        case "32 см":
+          return "normal";
+        case "45 см":
+          return "big";
+        default:
+          return "";
+      }
+    },
+    slugIngredient(image) {
+      return image.replace("/public/img/filling/", "").replace(".svg", "");
+    },
+  },
 };
 </script>
 
-<style lang="scss">
-.dough__image {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translate(0, -50%);
-  width: 36px;
-  height: 36px;
-  transition: 0.3s;
-  border-radius: 50%;
-}
-.diameter__image {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translate(0, -50%);
-  width: 36px;
-  height: 36px;
-  transition: 0.3s;
-  border-radius: 50%;
-  background-color: #e1ffd7;
-}
-.filling__image {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translate(0, -50%);
-  display: block;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background-color: #ffffff;
-}
-</style>
+<style lang="scss"></style>
