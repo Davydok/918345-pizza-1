@@ -7,6 +7,7 @@
         name="pizza_name"
         placeholder="Введите название пиццы"
         v-model="pizzaName"
+        @input="$emit('changedPizzaName', pizzaName)"
       />
     </label>
 
@@ -14,15 +15,11 @@
       <div class="content__constructor">
         <div :class="`pizza pizza--foundation--${foundation}`">
           <div class="pizza__wrapper">
-            <template
-              v-for="ingredient in buildedPizza.ingredients.filter(
-                ({ number }) => number > 0
-              )"
-            >
+            <template v-for="ingredient in filteredIngredients">
               <div
                 :key="`${ingredient.id}--first`"
                 :class="`pizza__filling pizza__filling--${slugIngredient(
-                  pizza.ingredients[ingredient.id - 1]
+                  getIngredient(ingredient.id)
                 )}`"
               ></div>
               <div
@@ -30,7 +27,7 @@
                 :key="`${ingredient.id}--second`"
                 :class="[
                   `pizza__filling pizza__filling--${slugIngredient(
-                    pizza.ingredients[ingredient.id - 1]
+                    getIngredient(ingredient.id)
                   )}`,
                   'pizza__filling--second',
                 ]"
@@ -40,7 +37,7 @@
                 :key="`${ingredient.id}--third`"
                 :class="[
                   `pizza__filling pizza__filling--${slugIngredient(
-                    pizza.ingredients[ingredient.id - 1]
+                    getIngredient(ingredient.id)
                   )}`,
                   'pizza__filling--third',
                 ]"
@@ -87,16 +84,19 @@ export default {
         this.pizza.dough[this.buildedPizza.dough - 1]
       )}-${this.slugSauce(this.pizza.sauces[this.buildedPizza.sauce - 1])}`;
     },
+    filteredIngredients() {
+      return this.buildedPizza.ingredients.filter(({ number }) => number > 0);
+    },
   },
   watch: {
-    pizzaName() {
-      this.$emit("changedPizzaName", this.pizzaName);
-    },
     buildedPizza() {
       this.pizzaName = this.buildedPizza.pizzaName;
     },
   },
   methods: {
+    getIngredient(searchId) {
+      return this.pizza.ingredients.find(({ id }) => id == searchId);
+    },
     addToCart(pizza) {
       this.$emit("addToCart", pizza);
     },

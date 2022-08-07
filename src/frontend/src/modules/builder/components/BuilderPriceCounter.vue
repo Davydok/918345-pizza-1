@@ -34,20 +34,24 @@ export default {
     },
     pizzalPrice() {
       return (
-        this.pizza.sizes[this.buildedPizza.size - 1].multiplier *
-        (this.pizza.dough[this.buildedPizza.dough - 1].price +
-          this.pizza.sauces[this.buildedPizza.sauce - 1].price +
+        this.getPizzaParametr("sizes", this.buildedPizza.size).multiplier *
+        (this.getPizzaParametr("dough", this.buildedPizza.dough).price +
+          this.getPizzaParametr("sauces", this.buildedPizza.sauce).price +
           this.ingredientsPrice)
       );
     },
     ingredientsPrice() {
       return this.buildedPizza.ingredients.reduce(
         (price, { id, number }) =>
-          price + number * this.pizza.ingredients[id - 1].price,
+          price + number * this.getPizzaParametr("ingredients", id).price,
         0
       );
     },
   },
-  methods: {},
+  methods: {
+    getPizzaParametr(name, searchId) {
+      return this.pizza[name].find(({ id }) => id == searchId);
+    },
+  },
 };
 </script>

@@ -29,17 +29,21 @@
             >
               <AppDrag
                 :transferData="ingredient"
-                :draggable="buildedPizza.ingredients[index].number < 3"
+                :draggable="
+                  buildedPizza.ingredients[index].number < ingredientNumberMax
+                "
               >
-                <SelectorItem :ingredient="ingredient" />
+                <SelectorItem
+                  :name="ingredient.name"
+                  :image="ingredient.image"
+                />
               </AppDrag>
 
               <ItemCounter
                 class="ingredients__counter"
-                :ingredient-number="buildedPizza.ingredients[index].number"
-                @valueChanged="
-                  (value) => $emit('changedIngredientNumber', index, value)
-                "
+                :init-number="buildedPizza.ingredients[index].number"
+                :number-max="ingredientNumberMax"
+                @valueChanged="$emit('changedIngredientNumber', index, $event)"
               />
             </li>
           </ul>
@@ -54,6 +58,7 @@ import ItemCounter from "@/common/components/ItemCounter";
 import RadioButton from "@/common/components/RadioButton";
 import SelectorItem from "@/common/components/SelectorItem";
 import AppDrag from "@/common/components/AppDrag";
+import { INGREDIENT_NUMBER_MAX } from "@/common/constants";
 
 export default {
   name: "BuilderIngredientsSelector",
@@ -69,7 +74,9 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      ingredientNumberMax: INGREDIENT_NUMBER_MAX,
+    };
   },
   methods: {},
 };

@@ -50,19 +50,12 @@ export default {
   data() {
     return {
       pizza,
-      buildedPizza: {
-        size: 1,
-        dough: 1,
-        sauce: 1,
-        ingredients: pizza.ingredients.map(({ id }) => ({
-          id,
-          number: 0,
-        })),
-        pizzaName: "",
-      },
+      buildedPizza: {},
     };
   },
-
+  created() {
+    this.resetPizza();
+  },
   methods: {
     setDough(dough) {
       this.buildedPizza.dough = dough;
