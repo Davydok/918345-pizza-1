@@ -26,7 +26,7 @@ export default {
   computed: {
     cartPrice() {
       return this.cart.reduce(
-        (price, { pizzalPrice }) => price + pizzalPrice,
+        (price, { pizzaPrice }) => price + pizzaPrice,
         0
       );
     },

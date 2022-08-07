@@ -1,11 +1,11 @@
 <template>
   <div class="content__result">
-    <p>Итого: {{ pizzalPrice }} ₽</p>
+    <p>Итого: {{ pizzaPrice }} ₽</p>
     <button
       type="button"
       class="button"
       :disabled="!isReady"
-      @click="$emit('addToCart', { buildedPizza, pizzalPrice })"
+      @click="$emit('addToCart', { buildedPizza, pizzaPrice })"
     >
       Готовьте!
     </button>
@@ -32,7 +32,7 @@ export default {
     isReady() {
       return this.buildedPizza.pizzaName && this.ingredientsPrice;
     },
-    pizzalPrice() {
+    pizzaPrice() {
       return (
         this.getPizzaParametr("sizes", this.buildedPizza.size).multiplier *
         (this.getPizzaParametr("dough", this.buildedPizza.dough).price +
