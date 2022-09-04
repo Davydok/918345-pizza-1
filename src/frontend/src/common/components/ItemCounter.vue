@@ -4,16 +4,22 @@
       type="button"
       class="counter__button counter__button--minus"
       :disabled="number < 1"
-      @click="number--"
+      @click="updateNumber(number - 1)"
     >
       <span class="visually-hidden">Меньше</span>
     </button>
-    <input type="text" name="counter" class="counter__input" v-model="number" />
+    <input
+      type="text"
+      name="counter"
+      class="counter__input"
+      :value="number"
+      @change="updateNumber($event.target.value)"
+    />
     <button
       type="button"
       class="counter__button counter__button--plus"
       :disabled="number > numberMax - 1"
-      @click="number++"
+      @click="updateNumber(number + 1)"
     >
       <span class="visually-hidden">Больше</span>
     </button>
@@ -24,7 +30,7 @@
 export default {
   name: "ItemCounter",
   props: {
-    initNumber: {
+    number: {
       type: Number,
       default: 0,
     },
@@ -33,24 +39,13 @@ export default {
       default: 0,
     },
   },
-  data() {
-    return {
-      number: this.initNumber,
-    };
-  },
-  watch: {
-    initNumber(curr) {
-      this.number = curr;
-    },
-    number(curr, prev) {
-      if (isNaN(+curr) || +curr > this.numberMax || +curr < 0) {
-        this.number = prev;
-      } else {
-        this.number = +curr;
-        this.$emit("valueChanged", +this.number);
+  methods: {
+    updateNumber(value) {
+      if (isNaN(value) || value > 3 || value < 0) {
+        return;
       }
+      this.$emit("valueChanged", +value);
     },
   },
-  methods: {},
 };
 </script>

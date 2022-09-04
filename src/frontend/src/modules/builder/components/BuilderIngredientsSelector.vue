@@ -41,7 +41,7 @@
 
               <ItemCounter
                 class="ingredients__counter"
-                :init-number="buildedPizza.ingredients[index].number"
+                :number="buildedPizza.ingredients[index].number"
                 :number-max="ingredientNumberMax"
                 @valueChanged="$emit('changedIngredientNumber', index, $event)"
               />

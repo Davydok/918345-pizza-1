@@ -25,10 +25,7 @@ export default {
   },
   computed: {
     cartPrice() {
-      return this.cart.reduce(
-        (price, { pizzaPrice }) => price + pizzaPrice,
-        0
-      );
+      return this.cart.reduce((price, { pizzaPrice }) => price + pizzaPrice, 0);
     },
   },
   methods: {
