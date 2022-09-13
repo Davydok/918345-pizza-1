@@ -1,36 +1,39 @@
 <template>
-  <form action="#" method="post">
-    <div class="content__wrapper">
-      <h1 class="title title--big">Конструктор пиццы</h1>
+  <main class="content">
+    <form action="#" method="post">
+      <div class="content__wrapper">
+        <h1 class="title title--big">Конструктор пиццы</h1>
 
-      <BuilderDoughSelector
-        :pizza="pizza"
-        :builded-pizza="buildedPizza"
-        @doughSelected="setDough"
-      />
+        <BuilderDoughSelector
+          :pizza="pizza"
+          :builded-pizza="buildedPizza"
+          @doughSelected="setDough"
+        />
 
-      <BuilderSizeSelector
-        :pizza="pizza"
-        :builded-pizza="buildedPizza"
-        @sizeSelected="setSize"
-      />
+        <BuilderSizeSelector
+          :pizza="pizza"
+          :builded-pizza="buildedPizza"
+          @sizeSelected="setSize"
+        />
 
-      <BuilderIngredientsSelector
-        :pizza="pizza"
-        :builded-pizza="buildedPizza"
-        @sauceSelected="setSauce"
-        @changedIngredientNumber="setIngredientNumber"
-      />
+        <BuilderIngredientsSelector
+          :pizza="pizza"
+          :builded-pizza="buildedPizza"
+          @sauceSelected="setSauce"
+          @changedIngredientNumber="setIngredientNumber"
+        />
 
-      <BuilderPizzaView
-        :pizza="pizza"
-        :builded-pizza="buildedPizza"
-        @changedPizzaName="setPizzaName"
-        @addToCart="addToCart"
-        @addIngredient="addIngredient"
-      />
-    </div>
-  </form>
+        <BuilderPizzaView
+          :pizza="pizza"
+          :builded-pizza="buildedPizza"
+          @changedPizzaName="setPizzaName"
+          @addToCart="addToCart"
+          @addIngredient="addIngredient"
+        />
+      </div>
+    </form>
+    <router-view />
+  </main>
 </template>
 
 <script>
@@ -41,6 +44,7 @@ import BuilderSizeSelector from "@/modules/builder/components/BuilderSizeSelecto
 import BuilderPizzaView from "@/modules/builder/components/BuilderPizzaView";
 
 export default {
+  name: "Index",
   components: {
     BuilderDoughSelector,
     BuilderIngredientsSelector,
