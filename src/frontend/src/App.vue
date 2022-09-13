@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <AppLayout />
+    <AppLayout :cartPrice="cartPrice" @addToCart="addToCart">
+      <router-view :cartPrice="cartPrice" @addToCart="addToCart" />
+    </AppLayout>
   </div>
 </template>
 
@@ -11,6 +13,21 @@ export default {
   name: "App",
   components: {
     AppLayout,
+  },
+  data() {
+    return {
+      cart: [],
+    };
+  },
+  computed: {
+    cartPrice() {
+      return this.cart.reduce((price, { pizzaPrice }) => price + pizzaPrice, 0);
+    },
+  },
+  methods: {
+    addToCart(pizza) {
+      this.cart.push(pizza);
+    },
   },
 };
 </script>
