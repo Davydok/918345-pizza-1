@@ -9,7 +9,7 @@
 </template>
 
 <script>
-const defaultLayout = "AppLayoutDefault";
+import { DEFAULT_LAYOUT } from "@/common/constants";
 
 export default {
   name: "AppLayout",
@@ -21,7 +21,7 @@ export default {
   },
   computed: {
     layout() {
-      const layout = this.$route.meta.layout || defaultLayout;
+      const layout = this.$route.meta.layout || DEFAULT_LAYOUT;
       return () => import(`@/layouts/${layout}.vue`);
     },
   },

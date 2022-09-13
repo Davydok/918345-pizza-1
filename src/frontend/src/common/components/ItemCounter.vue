@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import { INGREDIENT_NUMBER_MAX } from "@/common/constants";
+
 export default {
   name: "ItemCounter",
   props: {
@@ -41,7 +43,9 @@ export default {
   },
   methods: {
     updateNumber(value) {
-      if (isNaN(value) || value > 3 || value < 0) {
+      const isValidValue =
+        isNaN(value) || value > INGREDIENT_NUMBER_MAX || value < 0;
+      if (isValidValue) {
         return;
       }
       this.$emit("valueChanged", +value);

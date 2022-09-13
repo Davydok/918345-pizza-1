@@ -1,20 +1,20 @@
 <template>
   <header class="header">
     <div class="header__logo">
-      <router-link to="/" class="logo">
+      <RouterLink :to="{ name: 'Home' }" class="logo">
         <img
           src="@/assets/img/logo.svg"
           alt="V!U!E! Pizza logo"
           width="90"
           height="40"
         />
-      </router-link>
+      </RouterLink>
     </div>
     <div class="header__cart">
-      <router-link to="/cart">{{ cartPrice }} ₽</router-link>
+      <RouterLink :to="{ name: 'Cart' }">{{ cartPrice }} ₽</RouterLink>
     </div>
     <div class="header__user">
-      <router-link to="/login"><span>Войти</span></router-link>
+      <RouterLink :to="{ name: 'Login' }"><span>Войти</span></RouterLink>
     </div>
   </header>
 </template>

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <AppLayout :cartPrice="cartPrice" @addToCart="addToCart">
-      <router-view :cartPrice="cartPrice" @addToCart="addToCart" />
+      <RouterView :cartPrice="cartPrice" @addToCart="addToCart" />
     </AppLayout>
   </div>
 </template>

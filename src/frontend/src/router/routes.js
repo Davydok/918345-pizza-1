@@ -1,14 +1,16 @@
+import { getView } from "@/common/helpers";
+
 export default [
   {
     path: "/",
     name: "Home",
-    component: () => import("../views/Index.vue"),
+    component: getView("Index"),
     meta: { layout: "AppLayoutDefault" },
     children: [
       {
         path: "/login",
         name: "Login",
-        component: () => import("../views/Login.vue"),
+        component: getView("Login"),
         meta: { layout: "AppLayoutDefault" },
       },
     ],
@@ -16,19 +18,19 @@ export default [
   {
     path: "/cart",
     name: "Cart",
-    component: () => import("../views/Cart.vue"),
+    component: getView("Cart"),
     meta: { layout: "AppLayoutDefault" },
   },
   {
     path: "/orders",
     name: "Orders",
-    component: () => import("../views/Orders.vue"),
+    component: getView("Orders"),
     meta: { layout: "AppLayoutLayout" },
   },
   {
     path: "/profile",
     name: "Profile",
-    component: () => import("../views/Profile.vue"),
+    component: getView("Profile"),
     meta: { layout: "AppLayoutLayout" },
   },
 ];
