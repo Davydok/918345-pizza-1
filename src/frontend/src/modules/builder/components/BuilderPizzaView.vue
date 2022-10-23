@@ -6,12 +6,12 @@
         type="text"
         name="pizza_name"
         placeholder="Введите название пиццы"
-        v-model="pizzaName"
-        @input="$emit('changedPizzaName', pizzaName)"
+        :value="buildedPizza.pizzaName"
+        @input="setPizzaName($event.target.value)"
       />
     </label>
 
-    <AppDrop @drop="$emit('addIngredient', $event)">
+    <AppDrop @drop="addIngredient($event)">
       <div class="content__constructor">
         <div :class="`pizza pizza--foundation--${foundation}`">
           <div class="pizza__wrapper">
@@ -48,37 +48,19 @@
       </div>
     </AppDrop>
 
-    <BuilderPriceCounter
-      :pizza="pizza"
-      :builded-pizza="buildedPizza"
-      @addToCart="addToCart"
-    />
+    <BuilderPriceCounter />
   </div>
 </template>
 
 <script>
 import BuilderPriceCounter from "@/modules/builder/components/BuilderPriceCounter";
-import AppDrop from "@/common/components/AppDrop";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "BuilderPizzaView",
-  components: { BuilderPriceCounter, AppDrop },
-  props: {
-    pizza: {
-      type: Object,
-      required: true,
-    },
-    buildedPizza: {
-      type: Object,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      pizzaName: this.buildedPizza.pizzaName,
-    };
-  },
+  components: { BuilderPriceCounter },
   computed: {
+    ...mapState("Builder", ["pizza", "buildedPizza"]),
     foundation() {
       return `${this.slugDough(
         this.pizza.dough[this.buildedPizza.dough - 1]
@@ -88,17 +70,10 @@ export default {
       return this.buildedPizza.ingredients.filter(({ number }) => number > 0);
     },
   },
-  watch: {
-    buildedPizza() {
-      this.pizzaName = this.buildedPizza.pizzaName;
-    },
-  },
   methods: {
+    ...mapMutations("Builder", ["setPizzaName", "addIngredient"]),
     getIngredient(searchId) {
       return this.pizza.ingredients.find(({ id }) => id == searchId);
-    },
-    addToCart(pizza) {
-      this.$emit("addToCart", pizza);
     },
     slugIngredient({ image }) {
       return image.replace("/public/img/filling/", "").replace(".svg", "");

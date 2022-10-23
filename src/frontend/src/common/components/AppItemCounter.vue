@@ -30,7 +30,7 @@
 import { INGREDIENT_NUMBER_MAX } from "@/common/constants";
 
 export default {
-  name: "ItemCounter",
+  name: "AppItemCounter",
   props: {
     number: {
       type: Number,

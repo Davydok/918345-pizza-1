@@ -1,9 +1,5 @@
 <template>
-  <component
-    :is="layout"
-    :cartPrice="cartPrice"
-    @addToCart="$emit('addToCart', $event)"
-  >
+  <component :is="layout">
     <slot />
   </component>
 </template>
@@ -13,12 +9,6 @@ import { DEFAULT_LAYOUT } from "@/common/constants";
 
 export default {
   name: "AppLayout",
-  props: {
-    cartPrice: {
-      type: Number,
-      required: true,
-    },
-  },
   computed: {
     layout() {
       const layout = this.$route.meta.layout || DEFAULT_LAYOUT;
