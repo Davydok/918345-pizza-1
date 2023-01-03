@@ -18,7 +18,8 @@
     <button
       type="button"
       class="counter__button counter__button--plus"
-      :disabled="number > numberMax - 1"
+      :class="{ [`counter__button--${buttonColor}`]: buttonColor }"
+      :disabled="numberMax > 0 && number > numberMax - 1"
       @click="updateNumber(number + 1)"
     >
       <span class="visually-hidden">Больше</span>
@@ -27,8 +28,6 @@
 </template>
 
 <script>
-import { INGREDIENT_NUMBER_MAX } from "@/common/constants";
-
 export default {
   name: "AppItemCounter",
   props: {
@@ -40,12 +39,16 @@ export default {
       type: Number,
       default: 0,
     },
+    buttonColor: {
+      type: String,
+      default: "",
+    },
   },
   methods: {
     updateNumber(value) {
-      const isValidValue =
-        isNaN(value) || value > INGREDIENT_NUMBER_MAX || value < 0;
-      if (isValidValue) {
+      let isInvalidValue =
+        isNaN(value) || (this.numberMax && value > this.numberMax) || value < 0;
+      if (isInvalidValue) {
         return;
       }
       this.$emit("valueChanged", +value);

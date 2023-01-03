@@ -1,5 +1,15 @@
 import pizzaOptions from "@/static/pizza.json";
-import { RESET_PIZZA } from "@/store/mutations-types";
+import {
+  RESET_PRODUCT,
+  SET_PRODUCT,
+  SET_PRODUCT_NAME,
+  SET_DOUGH,
+  SET_SIZE,
+  SET_SAUCE,
+  SET_INGREDIENT_NUMBER,
+  SET_INGREDIENT,
+} from "@/store/mutations-types";
+import { uniqueId } from "lodash";
 
 const resetPizza = () => ({
   size: 1,
@@ -10,36 +20,68 @@ const resetPizza = () => ({
     number: 0,
   })),
   pizzaName: "",
+  id: uniqueId(),
 });
 
 export default {
   namespaced: true,
   state: {
     pizza: pizzaOptions,
-    buildedPizza: resetPizza(),
+    product: resetPizza(),
   },
-  getters: {},
+  getters: {
+    doughById: (state) => (id) => {
+      return state.pizza.dough.find((dough) => dough.id === id);
+    },
+    ingredientById: (state) => (id) => {
+      return state.pizza.ingredients.find((ingredient) => ingredient.id === id);
+    },
+    sauceById: (state) => (id) => {
+      return state.pizza.sauces.find((sauce) => sauce.id === id);
+    },
+    sizeById: (state) => (id) => {
+      return state.pizza.sizes.find((size) => size.id === id);
+    },
+    productPrice(
+      { product },
+      { sizeById, doughById, sauceById, ingredientById }
+    ) {
+      return (
+        sizeById(product.size).multiplier *
+        (doughById(product.dough).price +
+          sauceById(product.sauce).price +
+          product.ingredients.reduce(
+            (price, { id, number }) =>
+              price + number * ingredientById(id).price,
+            0
+          ))
+      );
+    },
+  },
   mutations: {
-    [RESET_PIZZA]({ buildedPizza }) {
-      Object.assign(buildedPizza, resetPizza());
+    [RESET_PRODUCT]({ product }) {
+      Object.assign(product, resetPizza());
     },
-    setDough({ buildedPizza }, dough) {
-      buildedPizza.dough = dough;
+    [SET_PRODUCT]({ product }, predefinedProduct) {
+      Object.assign(product, predefinedProduct);
     },
-    setPizzaName({ buildedPizza }, pizzaName) {
-      buildedPizza.pizzaName = pizzaName;
+    [SET_PRODUCT_NAME]({ product }, pizzaName) {
+      product.pizzaName = pizzaName;
     },
-    setSize({ buildedPizza }, size) {
-      buildedPizza.size = size;
+    [SET_DOUGH]({ product }, doughId) {
+      product.dough = doughId;
     },
-    setSauce({ buildedPizza }, sauce) {
-      buildedPizza.sauce = sauce;
+    [SET_SIZE]({ product }, sizeId) {
+      product.size = sizeId;
     },
-    addIngredient({ buildedPizza }, { id }) {
-      buildedPizza.ingredients[id - 1].number++;
+    [SET_SAUCE]({ product }, sauceId) {
+      product.sauce = sauceId;
     },
-    setIngredientNumber({ buildedPizza }, { index, number }) {
-      buildedPizza.ingredients[index].number = number;
+    [SET_INGREDIENT]({ product }, { id }) {
+      product.ingredients.find((ingredient) => ingredient.id === id).number++;
+    },
+    [SET_INGREDIENT_NUMBER]({ product }, { index, number }) {
+      product.ingredients[index].number = number;
     },
   },
   actions: {},

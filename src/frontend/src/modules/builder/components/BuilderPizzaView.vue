@@ -6,12 +6,12 @@
         type="text"
         name="pizza_name"
         placeholder="Введите название пиццы"
-        :value="buildedPizza.pizzaName"
+        :value="product.pizzaName"
         @input="setPizzaName($event.target.value)"
       />
     </label>
 
-    <AppDrop @drop="addIngredient($event)">
+    <AppDrop @drop="setIngredient($event)">
       <div class="content__constructor">
         <div :class="`pizza pizza--foundation--${foundation}`">
           <div class="pizza__wrapper">
@@ -19,7 +19,7 @@
               <div
                 :key="`${ingredient.id}--first`"
                 :class="`pizza__filling pizza__filling--${slugIngredient(
-                  getIngredient(ingredient.id)
+                  ingredient.id
                 )}`"
               ></div>
               <div
@@ -27,7 +27,7 @@
                 :key="`${ingredient.id}--second`"
                 :class="[
                   `pizza__filling pizza__filling--${slugIngredient(
-                    getIngredient(ingredient.id)
+                    ingredient.id
                   )}`,
                   'pizza__filling--second',
                 ]"
@@ -37,7 +37,7 @@
                 :key="`${ingredient.id}--third`"
                 :class="[
                   `pizza__filling pizza__filling--${slugIngredient(
-                    getIngredient(ingredient.id)
+                    ingredient.id
                   )}`,
                   'pizza__filling--third',
                 ]"
@@ -54,29 +54,48 @@
 
 <script>
 import BuilderPriceCounter from "@/modules/builder/components/BuilderPriceCounter";
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapGetters, mapMutations } from "vuex";
+import {
+  SET_PRODUCT_NAME,
+  SET_INGREDIENT,
+  SET_PRODUCT,
+  RESET_PRODUCT,
+} from "@/store/mutations-types";
 
 export default {
   name: "BuilderPizzaView",
   components: { BuilderPriceCounter },
   computed: {
-    ...mapState("Builder", ["pizza", "buildedPizza"]),
+    ...mapState("Builder", ["pizza", "product"]),
+    ...mapGetters("Builder", ["ingredientById", "doughById", "sauceById"]),
     foundation() {
       return `${this.slugDough(
-        this.pizza.dough[this.buildedPizza.dough - 1]
-      )}-${this.slugSauce(this.pizza.sauces[this.buildedPizza.sauce - 1])}`;
+        this.doughById(this.product.dough)
+      )}-${this.slugSauce(this.sauceById(this.product.sauce))}`;
     },
     filteredIngredients() {
-      return this.buildedPizza.ingredients.filter(({ number }) => number > 0);
+      return this.product.ingredients.filter(({ number }) => number > 0);
     },
   },
+  created() {
+    const product = this.$route.params.product;
+    if (product) {
+      this.setProduct(product);
+    } else {
+      this.resetProduct(product);
+    }
+  },
   methods: {
-    ...mapMutations("Builder", ["setPizzaName", "addIngredient"]),
-    getIngredient(searchId) {
-      return this.pizza.ingredients.find(({ id }) => id == searchId);
-    },
-    slugIngredient({ image }) {
-      return image.replace("/public/img/filling/", "").replace(".svg", "");
+    ...mapMutations("Builder", {
+      setPizzaName: SET_PRODUCT_NAME,
+      setIngredient: SET_INGREDIENT,
+      setProduct: SET_PRODUCT,
+      resetProduct: RESET_PRODUCT,
+    }),
+    slugIngredient(id) {
+      return this.ingredientById(id)
+        .image.replace("/public/img/filling/", "")
+        .replace(".svg", "");
     },
     slugDough({ name }) {
       switch (name) {

@@ -1,2 +1,11 @@
-export const RESET_PIZZA = "RESET_PIZZA";
-export const ADD_TO_CART = "ADD_TO_CART";
+export const RESET_PRODUCT = "RESET_PRODUCT";
+export const SET_PRODUCT = "SET_PRODUCT";
+export const ADD_PIZZA_TO_CART = "ADD_PIZZA_TO_CART";
+export const SET_NUMBER_OF_PRODUCT = "SET_NUMBER_OF_PRODUCT";
+export const SET_PRODUCT_NAME = "SET_PRODUCT_NAME";
+export const SET_DOUGH = "SET_DOUGH";
+export const SET_SIZE = "SET_SIZE";
+export const SET_SAUCE = "SET_SAUCE";
+export const SET_INGREDIENT = "SET_INGREDIENT";
+export const SET_INGREDIENT_NUMBER = "SET_INGREDIENT_NUMBER";
+export const SET_ADDITIONAL_NUMBER = "SET_ADDITIONAL_NUMBER";

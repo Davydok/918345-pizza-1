@@ -13,7 +13,7 @@
             :value="sauce.id"
             name="sauce"
             :title="sauce.name"
-            :checked="sauce.id == buildedPizza.sauce"
+            :checked="sauce.id == product.sauce"
             @click="setSauce(sauce.id)"
           />
         </div>
@@ -30,7 +30,7 @@
               <AppDrag
                 :transferData="ingredient"
                 :draggable="
-                  buildedPizza.ingredients[index].number < ingredientNumberMax
+                  product.ingredients[index].number < ingredientNumberMax
                 "
               >
                 <AppSelectorItem
@@ -41,7 +41,7 @@
 
               <AppItemCounter
                 class="ingredients__counter"
-                :number="buildedPizza.ingredients[index].number"
+                :number="product.ingredients[index].number"
                 :number-max="ingredientNumberMax"
                 @valueChanged="setIngredientNumber({ index, number: $event })"
               />
@@ -56,6 +56,7 @@
 <script>
 import { INGREDIENT_NUMBER_MAX } from "@/common/constants";
 import { mapState, mapMutations } from "vuex";
+import { SET_SAUCE, SET_INGREDIENT_NUMBER } from "@/store/mutations-types";
 
 export default {
   name: "BuilderIngredientsSelector",
@@ -65,10 +66,13 @@ export default {
     };
   },
   computed: {
-    ...mapState("Builder", ["pizza", "buildedPizza"]),
+    ...mapState("Builder", ["pizza", "product"]),
   },
   methods: {
-    ...mapMutations("Builder", ["setSauce", "setIngredientNumber"]),
+    ...mapMutations("Builder", {
+      setSauce: SET_SAUCE,
+      setIngredientNumber: SET_INGREDIENT_NUMBER,
+    }),
   },
 };
 </script>

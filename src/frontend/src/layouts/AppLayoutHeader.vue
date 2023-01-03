@@ -11,7 +11,9 @@
       </RouterLink>
     </div>
     <div class="header__cart">
-      <RouterLink :to="{ name: 'Cart' }">{{ cartPrice }} ₽</RouterLink>
+      <RouterLink :to="{ name: 'Cart' }">{{
+        $getFormatedPrice(cartPrice)
+      }}</RouterLink>
     </div>
     <div class="header__user">
       <RouterLink :to="{ name: 'Login' }"><span>Войти</span></RouterLink>
@@ -20,12 +22,13 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
+import { getFormatedPrice } from "@/common/mixins";
+import { mapGetters } from "vuex";
 
 export default {
   name: "AppLayoutHeader",
+  mixins: [getFormatedPrice],
   computed: {
-    ...mapState("Cart", ["cart"]),
     ...mapGetters("Cart", ["cartPrice"]),
   },
 };

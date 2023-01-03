@@ -14,7 +14,7 @@
             name="dought"
             :value="dough.id"
             class="visually-hidden"
-            :checked="dough.id == buildedPizza.dough"
+            :checked="dough.id == product.dough"
             @click="setDough(dough.id)"
           />
           <b>
@@ -29,14 +29,15 @@
 
 <script>
 import { mapState, mapMutations } from "vuex";
+import { SET_DOUGH } from "@/store/mutations-types";
 
 export default {
   name: "BuilderDoughSelector",
   computed: {
-    ...mapState("Builder", ["pizza", "buildedPizza"]),
+    ...mapState("Builder", ["pizza", "product"]),
   },
   methods: {
-    ...mapMutations("Builder", ["setDough"]),
+    ...mapMutations("Builder", { setDough: SET_DOUGH }),
     slugDough({ name }) {
       switch (name) {
         case "Тонкое":
