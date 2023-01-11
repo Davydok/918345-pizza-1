@@ -6,14 +6,6 @@ export default [
     name: "Home",
     component: getView("Index"),
     meta: { layout: "AppLayoutDefault" },
-    children: [
-      {
-        path: "/login",
-        name: "Login",
-        component: getView("Login"),
-        meta: { layout: "AppLayoutDefault" },
-      },
-    ],
   },
   {
     path: "/cart",

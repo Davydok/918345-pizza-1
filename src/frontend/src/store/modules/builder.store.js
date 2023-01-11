@@ -1,5 +1,5 @@
-import pizzaOptions from "@/static/pizza.json";
 import {
+  SET_ENTITY,
   RESET_PRODUCT,
   SET_PRODUCT,
   SET_PRODUCT_NAME,
@@ -10,24 +10,17 @@ import {
   SET_INGREDIENT,
 } from "@/store/mutations-types";
 import { uniqueId } from "lodash";
+import { capitalize } from "@/common/helpers";
+import pizzaOptions from "@/static/pizza.json";
 
-const resetPizza = () => ({
-  size: 1,
-  dough: 1,
-  sauce: 1,
-  ingredients: pizzaOptions.ingredients.map(({ id }) => ({
-    id,
-    number: 0,
-  })),
-  pizzaName: "",
-  id: uniqueId(),
-});
+const entity = "builder";
+const module = capitalize(entity);
 
 export default {
   namespaced: true,
   state: {
-    pizza: pizzaOptions,
-    product: resetPizza(),
+    pizza: {},
+    product: {},
   },
   getters: {
     doughById: (state) => (id) => {
@@ -59,8 +52,18 @@ export default {
     },
   },
   mutations: {
-    [RESET_PRODUCT]({ product }) {
-      Object.assign(product, resetPizza());
+    [RESET_PRODUCT](state) {
+      state.product = {
+        size: state.pizza.sizes[0].id,
+        dough: state.pizza.dough[0].id,
+        sauce: state.pizza.sauces[0].id,
+        ingredients: state.pizza.ingredients.map(({ id }) => ({
+          id,
+          number: 0,
+        })),
+        pizzaName: "",
+        id: uniqueId(),
+      };
     },
     [SET_PRODUCT]({ product }, predefinedProduct) {
       Object.assign(product, predefinedProduct);
@@ -84,5 +87,21 @@ export default {
       product.ingredients[index].number = number;
     },
   },
-  actions: {},
+  actions: {
+    query({ commit }) {
+      const data = pizzaOptions; // TODO: Add api call
+
+      commit(
+        SET_ENTITY,
+        {
+          module,
+          entity: "pizza",
+          value: data,
+        },
+        { root: true }
+      );
+
+      commit(RESET_PRODUCT);
+    },
+  },
 };

@@ -16,20 +16,23 @@
       }}</RouterLink>
     </div>
     <div class="header__user">
-      <RouterLink :to="{ name: 'Login' }"><span>Войти</span></RouterLink>
+      <a href="#" class="header__login" @click="login"><span>Войти</span></a>
     </div>
   </header>
 </template>
 
 <script>
 import { getFormatedPrice } from "@/common/mixins";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "AppLayoutHeader",
   mixins: [getFormatedPrice],
   computed: {
     ...mapGetters("Cart", ["cartPrice"]),
+  },
+  methods: {
+    ...mapActions("Auth", ["login"]),
   },
 };
 </script>
