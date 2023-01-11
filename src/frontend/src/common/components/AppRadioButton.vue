@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  name: "RadioButton",
+  name: "AppRadioButton",
   props: {
     value: {
       type: [String, Number],

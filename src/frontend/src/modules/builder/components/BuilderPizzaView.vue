@@ -6,12 +6,12 @@
         type="text"
         name="pizza_name"
         placeholder="Введите название пиццы"
-        v-model="pizzaName"
-        @input="$emit('changedPizzaName', pizzaName)"
+        :value="product.pizzaName"
+        @input="setPizzaName($event.target.value)"
       />
     </label>
 
-    <AppDrop @drop="$emit('addIngredient', $event)">
+    <AppDrop @drop="setIngredient($event)">
       <div class="content__constructor">
         <div :class="`pizza pizza--foundation--${foundation}`">
           <div class="pizza__wrapper">
@@ -19,7 +19,7 @@
               <div
                 :key="`${ingredient.id}--first`"
                 :class="`pizza__filling pizza__filling--${slugIngredient(
-                  getIngredient(ingredient.id)
+                  ingredient.id
                 )}`"
               ></div>
               <div
@@ -27,7 +27,7 @@
                 :key="`${ingredient.id}--second`"
                 :class="[
                   `pizza__filling pizza__filling--${slugIngredient(
-                    getIngredient(ingredient.id)
+                    ingredient.id
                   )}`,
                   'pizza__filling--second',
                 ]"
@@ -37,7 +37,7 @@
                 :key="`${ingredient.id}--third`"
                 :class="[
                   `pizza__filling pizza__filling--${slugIngredient(
-                    getIngredient(ingredient.id)
+                    ingredient.id
                   )}`,
                   'pizza__filling--third',
                 ]"
@@ -48,60 +48,54 @@
       </div>
     </AppDrop>
 
-    <BuilderPriceCounter
-      :pizza="pizza"
-      :builded-pizza="buildedPizza"
-      @addToCart="addToCart"
-    />
+    <BuilderPriceCounter />
   </div>
 </template>
 
 <script>
 import BuilderPriceCounter from "@/modules/builder/components/BuilderPriceCounter";
-import AppDrop from "@/common/components/AppDrop";
+import { mapState, mapGetters, mapMutations } from "vuex";
+import {
+  SET_PRODUCT_NAME,
+  SET_INGREDIENT,
+  SET_PRODUCT,
+  RESET_PRODUCT,
+} from "@/store/mutations-types";
 
 export default {
   name: "BuilderPizzaView",
-  components: { BuilderPriceCounter, AppDrop },
-  props: {
-    pizza: {
-      type: Object,
-      required: true,
-    },
-    buildedPizza: {
-      type: Object,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      pizzaName: this.buildedPizza.pizzaName,
-    };
-  },
+  components: { BuilderPriceCounter },
   computed: {
+    ...mapState("Builder", ["pizza", "product"]),
+    ...mapGetters("Builder", ["ingredientById", "doughById", "sauceById"]),
     foundation() {
       return `${this.slugDough(
-        this.pizza.dough[this.buildedPizza.dough - 1]
-      )}-${this.slugSauce(this.pizza.sauces[this.buildedPizza.sauce - 1])}`;
+        this.doughById(this.product.dough)
+      )}-${this.slugSauce(this.sauceById(this.product.sauce))}`;
     },
     filteredIngredients() {
-      return this.buildedPizza.ingredients.filter(({ number }) => number > 0);
+      return this.product.ingredients.filter(({ number }) => number > 0);
     },
   },
-  watch: {
-    buildedPizza() {
-      this.pizzaName = this.buildedPizza.pizzaName;
-    },
+  created() {
+    const product = this.$route.params.product;
+    if (product) {
+      this.setProduct(product);
+    } else {
+      this.resetProduct(product);
+    }
   },
   methods: {
-    getIngredient(searchId) {
-      return this.pizza.ingredients.find(({ id }) => id == searchId);
-    },
-    addToCart(pizza) {
-      this.$emit("addToCart", pizza);
-    },
-    slugIngredient({ image }) {
-      return image.replace("/public/img/filling/", "").replace(".svg", "");
+    ...mapMutations("Builder", {
+      setPizzaName: SET_PRODUCT_NAME,
+      setIngredient: SET_INGREDIENT,
+      setProduct: SET_PRODUCT,
+      resetProduct: RESET_PRODUCT,
+    }),
+    slugIngredient(id) {
+      return this.ingredientById(id)
+        .image.replace("/public/img/filling/", "")
+        .replace(".svg", "");
     },
     slugDough({ name }) {
       switch (name) {

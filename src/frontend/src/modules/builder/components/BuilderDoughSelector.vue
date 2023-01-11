@@ -12,10 +12,10 @@
           <input
             type="radio"
             name="dought"
-            :value="slugDough(dough)"
+            :value="dough.id"
             class="visually-hidden"
-            :checked="dough.id == buildedPizza.dough"
-            @click="$emit('doughSelected', dough.id)"
+            :checked="dough.id == product.dough"
+            @click="setDough(dough.id)"
           />
           <b>
             {{ dough.name }}
@@ -28,23 +28,16 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from "vuex";
+import { SET_DOUGH } from "@/store/mutations-types";
+
 export default {
   name: "BuilderDoughSelector",
-  components: {},
-  props: {
-    pizza: {
-      type: Object,
-      required: true,
-    },
-    buildedPizza: {
-      type: Object,
-      required: true,
-    },
-  },
-  data() {
-    return {};
+  computed: {
+    ...mapState("Builder", ["pizza", "product"]),
   },
   methods: {
+    ...mapMutations("Builder", { setDough: SET_DOUGH }),
     slugDough({ name }) {
       switch (name) {
         case "Тонкое":

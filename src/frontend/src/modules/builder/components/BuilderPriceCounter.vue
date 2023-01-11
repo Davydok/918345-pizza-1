@@ -1,11 +1,11 @@
 <template>
   <div class="content__result">
-    <p>Итого: {{ pizzaPrice }} ₽</p>
+    <p>Итого: {{ $getFormatedPrice(productPrice) }}</p>
     <button
       type="button"
       class="button"
       :disabled="!isReady"
-      @click="$emit('addToCart', { buildedPizza, pizzaPrice })"
+      @click="addPizzaToCart"
     >
       Готовьте!
     </button>
@@ -13,44 +13,36 @@
 </template>
 
 <script>
+import { getFormatedPrice } from "@/common/mixins";
+import { mapState, mapGetters, mapMutations } from "vuex";
+import { RESET_PRODUCT, ADD_PIZZA_TO_CART } from "@/store/mutations-types";
+
 export default {
   name: "BuilderPriceCounter",
-  props: {
-    pizza: {
-      type: Object,
-      required: true,
-    },
-    buildedPizza: {
-      type: Object,
-      required: true,
-    },
-  },
-  data() {
-    return {};
-  },
+  mixins: [getFormatedPrice],
   computed: {
+    ...mapState("Builder", ["pizza", "product"]),
+    ...mapGetters("Builder", ["productPrice"]),
     isReady() {
-      return this.buildedPizza.pizzaName && this.ingredientsPrice;
-    },
-    pizzaPrice() {
       return (
-        this.getPizzaParametr("sizes", this.buildedPizza.size).multiplier *
-        (this.getPizzaParametr("dough", this.buildedPizza.dough).price +
-          this.getPizzaParametr("sauces", this.buildedPizza.sauce).price +
-          this.ingredientsPrice)
-      );
-    },
-    ingredientsPrice() {
-      return this.buildedPizza.ingredients.reduce(
-        (price, { id, number }) =>
-          price + number * this.getPizzaParametr("ingredients", id).price,
-        0
+        this.product.pizzaName &&
+        this.product.ingredients.some((ingredient) => ingredient.number > 0)
       );
     },
   },
   methods: {
+    ...mapMutations("Builder", [RESET_PRODUCT]),
+    ...mapMutations("Cart", [ADD_PIZZA_TO_CART]),
     getPizzaParametr(name, searchId) {
       return this.pizza[name].find(({ id }) => id == searchId);
+    },
+    addPizzaToCart() {
+      this[ADD_PIZZA_TO_CART]({
+        product: { ...this.product },
+        price: this.productPrice,
+        number: 1,
+      });
+      this[RESET_PRODUCT]();
     },
   },
 };

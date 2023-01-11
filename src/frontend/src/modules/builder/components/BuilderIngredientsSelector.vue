@@ -6,15 +6,15 @@
       <div class="sheet__content ingredients">
         <div class="ingredients__sauce">
           <p>Основной соус:</p>
-          <RadioButton
+          <AppRadioButton
             v-for="sauce in pizza.sauces"
             :key="`sauce-${sauce.id}`"
             class="radio ingredients__input"
             :value="sauce.id"
             name="sauce"
             :title="sauce.name"
-            :checked="sauce.id == buildedPizza.sauce"
-            @click="$emit('sauceSelected', sauce.id)"
+            :checked="sauce.id == product.sauce"
+            @click="setSauce(sauce.id)"
           />
         </div>
 
@@ -30,20 +30,20 @@
               <AppDrag
                 :transferData="ingredient"
                 :draggable="
-                  buildedPizza.ingredients[index].number < ingredientNumberMax
+                  product.ingredients[index].number < ingredientNumberMax
                 "
               >
-                <SelectorItem
+                <AppSelectorItem
                   :name="ingredient.name"
                   :image="ingredient.image"
                 />
               </AppDrag>
 
-              <ItemCounter
+              <AppItemCounter
                 class="ingredients__counter"
-                :number="buildedPizza.ingredients[index].number"
+                :number="product.ingredients[index].number"
                 :number-max="ingredientNumberMax"
-                @valueChanged="$emit('changedIngredientNumber', index, $event)"
+                @valueChanged="setIngredientNumber({ index, number: $event })"
               />
             </li>
           </ul>
@@ -54,30 +54,25 @@
 </template>
 
 <script>
-import ItemCounter from "@/common/components/ItemCounter";
-import RadioButton from "@/common/components/RadioButton";
-import SelectorItem from "@/common/components/SelectorItem";
-import AppDrag from "@/common/components/AppDrag";
 import { INGREDIENT_NUMBER_MAX } from "@/common/constants";
+import { mapState, mapMutations } from "vuex";
+import { SET_SAUCE, SET_INGREDIENT_NUMBER } from "@/store/mutations-types";
 
 export default {
   name: "BuilderIngredientsSelector",
-  components: { ItemCounter, RadioButton, SelectorItem, AppDrag },
-  props: {
-    pizza: {
-      type: Object,
-      required: true,
-    },
-    buildedPizza: {
-      type: Object,
-      required: true,
-    },
-  },
   data() {
     return {
       ingredientNumberMax: INGREDIENT_NUMBER_MAX,
     };
   },
-  methods: {},
+  computed: {
+    ...mapState("Builder", ["pizza", "product"]),
+  },
+  methods: {
+    ...mapMutations("Builder", {
+      setSauce: SET_SAUCE,
+      setIngredientNumber: SET_INGREDIENT_NUMBER,
+    }),
+  },
 };
 </script>

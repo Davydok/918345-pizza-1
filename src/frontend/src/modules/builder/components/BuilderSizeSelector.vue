@@ -13,10 +13,10 @@
           <input
             type="radio"
             name="diameter"
-            :value="slugSize(size)"
+            :value="size.id"
             class="visually-hidden"
-            :checked="size.id == buildedPizza.size"
-            @click="$emit('sizeSelected', size.id)"
+            :checked="size.id == product.size"
+            @click="setSize(size.id)"
           />
           <span>
             {{ size.name }}
@@ -28,22 +28,18 @@
 </template>
 
 <script>
+import { SET_SIZE } from "@/store/mutations-types";
+import { mapState, mapMutations } from "vuex";
+
 export default {
   name: "BuilderSizeSelector",
-  props: {
-    pizza: {
-      type: Object,
-      required: true,
-    },
-    buildedPizza: {
-      type: Object,
-      required: true,
-    },
-  },
-  data() {
-    return {};
+  computed: {
+    ...mapState("Builder", ["pizza", "product"]),
   },
   methods: {
+    ...mapMutations("Builder", {
+      setSize: SET_SIZE,
+    }),
     slugSize({ name }) {
       switch (name) {
         case "23 см":
